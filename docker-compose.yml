@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      SA_PASSWORD: "YourStrong(!)Password"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - ./sql:/usr/src/sql
+    # This command ensures that the SQL init script is run when the container starts
+    command:
+      - /bin/bash
+      - -c
+      - |
+        /opt/mssql/bin/sqlservr & sleep 30
+        /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'YourStrong(!)Password' -d master -i /usr/src/sql/init.sql
+        wait
+
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./php:/var/www/html
+    depends_on:
+      - sqlserver
+
+  web:
+    image: nginx:latest
+    volumes:
+      - ./php:/var/www/html
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - php
+
+networks:
+  default:
+    driver: bridge
