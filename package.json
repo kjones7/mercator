@@ -1,0 +1,23 @@
+{
+  "name": "mercator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kjones7/mercator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kjones7/mercator/issues"
+  },
+  "homepage": "https://github.com/kjones7/mercator#readme",
+  "dependencies": {
+    "ol": "^9.1.0"
+  }
+}

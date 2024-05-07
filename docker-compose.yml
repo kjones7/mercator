@@ -1,6 +1,17 @@
 version: '3.8'
 
 services:
+  npm:
+    build:
+      # Set the Docker build context to the current directory.
+      # This allows all files and directories in the current directory to be accessible to the Dockerfile for use during the build.
+      context: .
+      dockerfile: Dockerfile.npm
+    volumes:
+      - ./js:/app
+      # Create an anonymous volume for node_modules to prevent overwriting by the host
+      - /app/node_modules
+
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
@@ -24,14 +35,14 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./php:/var/www/html
+      - ./public:/var/www/html
     depends_on:
       - sqlserver
 
   web:
     image: nginx:latest
     volumes:
-      - ./php:/var/www/html
+      - ./public:/var/www/html
       - ./nginx.conf:/etc/nginx/nginx.conf
     ports:
       - "80:80"
